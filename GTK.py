@@ -7,9 +7,10 @@ from tkinter import *
 from GPG import Point,Points
 #~ class Graph(Toplevel):
 class Graph(Tk):
-	def __init__(self,parrent=None,x=(-25,25),y=(0,100),x_grid_len=500,y_grid_len=500):
+	def __init__(self,parrent=None,x=(-25,25),y=(0,100),x_grid_len=500,y_grid_len=500,name='graph'):
 		#~ Toplevel.__init__(self,parrent)
 		Tk.__init__(self)
+		self.title(name)
 		self.__x=x
 		self.__y=y
 		self.__x_grid_len=x_grid_len
