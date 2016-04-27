@@ -27,10 +27,10 @@ class Function:
 def _newton(x,func,e=(0.2,0.15)):
 	xm=Matrix(vrow=x)
 	_h=~func.getHesse(x)
-	#print(_h)
+	#~ print(_h)
 	f3=lambda *x: (func.calcDy((0,),x),func.calcDy((1,),x))
 	x1=round(xm-Matrix(vrow=f3(*x))*_h,5)
-	#print(x1)
+	#~ print(x1)
 	if (x1-xm).getRadius()<e[0] or abs(func.calcF(x1.getList())-func.calcF(x))<e[1]:
 		return x1.getList()
 	else:
@@ -41,11 +41,12 @@ def Newton(x,func,e=(0.2,0.15)):
 
 
 def main():
-	#~ f=Function(func=lambda *x: x[0]**2)
-	#~ print(f.calcDy((0,),(50,)))
+	#~ f=Function(func=lambda *x: x[0]**2,dx=0.00001)
+	#~ print(f.calcDy((0,0),(50,)))
 	#~ f=lambda x1,x2: 2*x1**2+x1*x2+x2**2
-	f=lambda x,y: sin(0.5*x**2-0.25*y**2+3)*cos(2*x+1-exp(y))
-	print(Newton((0,0.5),f,e=(0.001,0.001)))
+	#~ f=lambda x,y: sin(0.5*x**2-0.25*y**2+3)*cos(2*x+1-exp(y))
+	f=lambda x,y: 2 *x**2 + x * y + y**2
+	print(Newton((0.5,1),f,e=(0.1,0.15)))
 
 if __name__=='__main__':
 	main()
