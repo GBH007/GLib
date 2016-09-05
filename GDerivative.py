@@ -3,7 +3,6 @@
 #           Gregoriy Nikonirov
 # email:    mrgbh007@gmail.com
 #
-from math import *
 from GMatrix import Matrix
 class Function:
 	def __init__(self,dx=0.001,func=lambda *x: 0):

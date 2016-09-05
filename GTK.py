@@ -57,7 +57,7 @@ class Graph(Tk):
 			if grid:self.__canv.create_line(xg,self.__y_grid_len,xg,0,width=0.2,fill='gray',tags='xgrid')
 			#~ self.__canv.create_line(xg,self.__y_grid_len,xg,self.__y_grid_len-6,width=0.5,fill='black',tags='xgrid')
 			#~ self.__canv.create_text(xg,self.__y_grid_len-20,text=str(self._x_func(xg)),fill='red',tags='xgrid')
-			self.__canv.create_text(xg,self.__y_grid_len-20,text='{0:4.2f}'.format(self._x_func(xg)),fill='black',tags='xgrid')
+			self.__canv.create_text(xg,self.__y_grid_len-10,text='{0:4.2f}'.format(self._x_func(xg)),fill='black',tags='xgrid',anchor=S)
 		self.__canv.update()
 	def __y_grid(self,marks=10,grid=False):
 		self.__canv.delete('ygrid')
@@ -67,7 +67,7 @@ class Graph(Tk):
 			if grid:self.__canv.create_line(0,yg,self.__x_grid_len,yg,width=0.2,fill='gray',tags='ygrid')
 			#~ self.__canv.create_line(0,yg,6,yg,width=0.5,fill='black',tags='ygrid')
 			#~ self.__canv.create_text(20,yg,text=str(self._y_func(yg)),fill='red',tags='ygrid')
-			self.__canv.create_text(20,yg,text='{0:4.2f}'.format(self._y_func(yg)),fill='black',tags='ygrid')
+			self.__canv.create_text(10,yg,text='{0:4.2f}'.format(self._y_func(yg)),fill='black',tags='ygrid',anchor=W)
 		self.__canv.update()
 	def addXLine(self,x,clr='black'):
 		self.__canv.create_line(self._x_to_grid(x),self.__y_grid_len,self._x_to_grid(x),0,width=0.2,fill=clr,tags='xline',dash=(20,10))
