@@ -4,7 +4,7 @@
 # email:    mrgbh007@gmail.com
 #
 from tkinter import *
-from GPG import Point,Points
+from GPG import Points
 #~ class Graph(Toplevel):
 class Graph(Tk):
 	def __init__(self,parrent=None,x=(-25,25),y=(0,100),x_grid_len=500,y_grid_len=500,name='graph'):
@@ -95,6 +95,31 @@ class Graph(Tk):
 					self.__canv.create_line(self._x_to_grid(point[0]),self._y_to_grid(point[1]),self._x_to_grid(i[0]),self._y_to_grid(i[1]),width=1,fill=sign,tags='func')
 					point=i
 		self.__canv.update()
+	def reGist(self,axis=0,dx=1,autoset=True,grid=False):
+		self.__canv.delete('func')
+		if autoset:self.setAutoGist(axis)
+		for j,sign in self.__point_lists:
+			points=j.toGist(axis)
+			point=None
+			for i in points:
+				self.__canv.create_rectangle(self._x_to_grid(i[0]-dx/2),self._y_to_grid(i[1]),self._x_to_grid(i[0]+dx/2),self._y_to_grid(0),fill=sign,tags='func')
+		self.__x_grid(grid=grid)
+		self.__y_grid(grid=grid)
+		self.__canv.update()
+	def setAutoGist(self,axis=0):
+		mi=self.__point_lists[0][0].min()
+		ma=self.__point_lists[0][0].max()
+		#~ ni=self.__point_lists[0][0].minN()
+		na=self.__point_lists[0][0].maxN()
+		for i,sign in self.__point_lists:
+			mi=mi.min(i.min())
+			ma=ma.max(i.max())
+			#~ ni=min(ni,i.minN())
+			na=max(na,i.maxN())
+		x=mi[axis],ma[axis]
+		y=0,na
+		self.setX(x)
+		self.setY(y)
 def main():
 	g=Graph()
 	p=Points()
@@ -114,6 +139,20 @@ def main():
 	g.addXLine(1)
 	g.addYLine(1)
 	g.reGrid(grid=True,autoset=False)
+	mainloop()
+def main1():
+	g=Graph()
+	p=Points()
+	p.add((1,),1)
+	p.add((2,),2)
+	p.add((3,),3)
+	p.add((4,),2)
+	p.add((5,),1)
+	g.addPointList(p,'blue')
+	g.setX((0,6))
+	g.setY((0,5))
+	print(p)
+	g.reGist(autoset=0)
 	mainloop()
 if __name__=='__main__':
 	main()
