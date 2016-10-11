@@ -78,6 +78,12 @@ class Graph(Tk):
 	def clearXLine(self):
 		self.__canv.delete('xline')
 		self.__canv.update()
+	def addPoint(self,x,y,clr='black',r=3):
+		x1=self._x_to_grid(x)
+		y1=self._y_to_grid(y)
+		r/=2
+		self.__canv.create_oval(x1-r,y1-r,x1+r,y1+r,fill=clr,tags='point')
+		self.__canv.update()
 	def clearYLine(self):
 		self.__canv.delete('yline')
 		self.__canv.update()
