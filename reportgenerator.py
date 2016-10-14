@@ -45,6 +45,7 @@ class HTMLReportGenerator(ReportGenerator):
 		<style type="text/css">
 		.table{
 			border: 2px solid black;
+			text-align: center;
 		}
 		.selected{
 			border: 2px solid red;
@@ -88,11 +89,12 @@ def main():
 	a=TXTReportGenerator('report.txt')
 	b=HTMLReportGenerator('report.html')
 	txt='hello world!'
-	table=[[(i,j) for j in range(4)] for i in range(5)]
+	table=[['-'*(i+j+1) for j in range(4)] for i in range(5)]
 	a.addText(txt)
 	b.addText(txt)
 	a.addTable(table)
-	b.addTable(table,selected_row=[1,4],selected_rc=[(0,1)],selected_col=[0])
+	#~ b.addTable(table,selected_row=[1,4],selected_rc=[(0,1)],selected_col=[0])
+	b.addTable(table)
 	a.commitAndExit()
 	b.commitAndExit()
 
