@@ -14,18 +14,60 @@ class Plotter:
 		self.clr=color
 		self.name=name
 	
-	def getName(self)return self.name
+	def getName(self):return self.name
 	
-	def min(self)return self.pl.min()
+	def min(self):return self.pl.min()
 	
-	def max(self)return self.pl.max()
+	def max(self):return self.pl.max()
+	
+	def maxN(self):return self.pl.maxN()
 	
 	def plot(self,axis):raise AttributeError
 	
 class LinePlotter(Plotter):
 	
+	def __init__(self,graph,point_list,color='black',name='noname',width=1):
+		Plotter.__init__(self,graph,point_list,color,name)
+		self.width=width
+	
 	def plot(self,axis):
-		pass
+		points=self.pl.toPlot(axis)
+		point=None
+		for i in points:
+			if point==None:point=i
+			else:
+				self.gr.canv.create_line(
+					self.gr._x_to_grid(point[0]),
+					self.gr._y_to_grid(point[1]),
+					self.gr._x_to_grid(i[0]),
+					self.gr._y_to_grid(i[1]),
+					width=self.width,
+					fill=self.clr,
+					tags=self.name
+				)
+				point=i
+	
+class PointPlotter(Plotter):
+	
+	def __init__(self,graph,point_list,color='black',name='noname',radius=1):
+		Plotter.__init__(self,graph,point_list,color,name)
+		self.radius=radius
+	
+	def plot(self,axis):
+		points=self.pl.toPlot(axis)
+		point=None
+		for i in points:
+			x=self.gr._x_to_grid(i[0])
+			y=self.gr._y_to_grid(i[1])
+			self.gr.canv.create_oval(
+				x-self.radius,
+				y-self.radius,
+				x+self.radius,
+				y+self.radius,
+				fill=self.clr,
+				width=0,
+				tags=self.name
+			)
 		
 class CanvasDescriptor:
 	def __get__(self,ins,own):
@@ -40,19 +82,29 @@ class Graph:
 		self.__y=y
 		self.__x_grid_len=x_grid_len
 		self.__y_grid_len=y_grid_len
-		self.__point_lists=[]
+		self.__plotter_list=[]
+		#~ self.__point_lists={}
 		self.__canv=Canvas(self,width=self.__x_grid_len,height=self.__y_grid_len)
 		self.__x_grid()
 		self.__y_grid()
 		self.__canv.pack()
 		
-	def addPointList(self,point_list,sign='green'):
-		self.__point_lists.append((point_list,sign))
+	#~ def addPointList(self,point_list,sign='green'):
+		#~ self.__point_lists.append((point_list,sign))
 		
-	def delPointList(self,point_list):
-		for i in self.__point_lists:
-			if point_list is i[0]:
-				self.__point_lists.remove(i)
+	#~ def delPointList(self,point_list):
+		#~ for i in self.__point_lists:
+			#~ if point_list is i[0]:
+				#~ self.__point_lists.remove(i)
+				#~ break
+				
+	def addPlotter(self,plotter):
+		self.__plotter_list.append(plotter)
+		
+	def delPointList(self,plotter):
+		for i in self.__plotter_list:
+			if plotter is i[0]:
+				self.__plotter_list.remove(i)
 				break
 				
 	def setX(self,x):self.__x=x
@@ -60,9 +112,9 @@ class Graph:
 	def setY(self,y):self.__y=y
 		
 	def setAuto(self,axis=(0,1)):
-		mi=self.__point_lists[0][0].min()
-		ma=self.__point_lists[0][0].max()
-		for i,sign in self.__point_lists:
+		mi=self.__plotter_list[0].min()
+		ma=self.__plotter_list[0].max()
+		for i,sign in self.__plotter_list:
 			mi=mi.min(i.min())
 			ma=ma.max(i.max())
 		x=mi[axis[0]],ma[axis[0]]
@@ -88,8 +140,6 @@ class Graph:
 			xg=i*self.__x_grid_len//marks
 			if not xg:continue
 			if grid:self.__canv.create_line(xg,self.__y_grid_len,xg,0,width=0.2,fill='gray',tags='xgrid')
-			#~ self.__canv.create_line(xg,self.__y_grid_len,xg,self.__y_grid_len-6,width=0.5,fill='black',tags='xgrid')
-			#~ self.__canv.create_text(xg,self.__y_grid_len-20,text=str(self._x_func(xg)),fill='red',tags='xgrid')
 			self.__canv.create_text(xg,self.__y_grid_len-10,text='{0:4.2f}'.format(self._x_func(xg)),fill='black',tags='xgrid',anchor=S)
 		self.__canv.update()
 		
@@ -99,8 +149,6 @@ class Graph:
 			yg=i*self.__y_grid_len//marks
 			if not yg:continue
 			if grid:self.__canv.create_line(0,yg,self.__x_grid_len,yg,width=0.2,fill='gray',tags='ygrid')
-			#~ self.__canv.create_line(0,yg,6,yg,width=0.5,fill='black',tags='ygrid')
-			#~ self.__canv.create_text(20,yg,text=str(self._y_func(yg)),fill='red',tags='ygrid')
 			self.__canv.create_text(10,yg,text='{0:4.2f}'.format(self._y_func(yg)),fill='black',tags='ygrid',anchor=W)
 		self.__canv.update()
 		
@@ -119,7 +167,6 @@ class Graph:
 	def addPoint(self,x,y,clr='black',r=3):
 		x1=self._x_to_grid(x)
 		y1=self._y_to_grid(y)
-		r/=2
 		self.__canv.create_oval(x1-r,y1-r,x1+r,y1+r,fill=clr,tags='point')
 		self.__canv.update()
 		
@@ -132,20 +179,14 @@ class Graph:
 		if autoset:self.setAuto(axis)
 		self.__x_grid(grid=grid)
 		self.__y_grid(grid=grid)
-		for i,sign in self.__point_lists:
-			points=i.toPlot(axis)
-			point=None
-			for i in points:
-				if point==None:point=i
-				else:
-					self.__canv.create_line(self._x_to_grid(point[0]),self._y_to_grid(point[1]),self._x_to_grid(i[0]),self._y_to_grid(i[1]),width=1,fill=sign,tags='func')
-					point=i
+		for i in self.__plotter_list:
+			i.plot(axis)
 		self.__canv.update()
 		
 	def reGist(self,axis=0,dx=1,autoset=True,grid=False):
 		self.__canv.delete('func')
 		if autoset:self.setAutoGist(axis)
-		for j,sign in self.__point_lists:
+		for j,sign in self.__plotter_list:
 			points=j.toGist(axis)
 			point=None
 			for i in points:
@@ -155,10 +196,10 @@ class Graph:
 		self.__canv.update()
 		
 	def setAutoGist(self,axis=0):
-		mi=self.__point_lists[0][0].min()
-		ma=self.__point_lists[0][0].max()
+		mi=self.__plotter_list[0].min()
+		ma=self.__plotter_list[0].max()
 		#~ ni=self.__point_lists[0][0].minN()
-		na=self.__point_lists[0][0].maxN()
+		na=self.__plotter_list[0].maxN()
 		for i,sign in self.__point_lists:
 			mi=mi.min(i.min())
 			ma=ma.max(i.max())
@@ -184,7 +225,7 @@ class GraphTk(Tk,Graph):
 		self.title(name)
 		
 def main():
-	g=Graph()
+	g=GraphTk()
 	p=Points()
 	p1=Points()
 	f=lambda x: x**2
@@ -193,8 +234,9 @@ def main():
 		p.add((i/10,f(i/10)))
 		p1.add((i/10,f1(i/10)))
 	#~ g=Graph()
-	g.addPointList(p,'blue')
-	g.addPointList(p1,'red')
+	g.addPlotter(LinePlotter(g,p,'blue','p',2))
+	g.addPlotter(PointPlotter(g,p1,'red','p1',2))
+	#~ g.addPointList(p1,'red')
 	#~ print(p1)
 	#~ g.reGrid(gist=True,axis=0)
 	g.setX((-2,2))
@@ -204,7 +246,7 @@ def main():
 	g.reGrid(grid=True,autoset=False)
 	mainloop()
 def main1():
-	g=Graph()
+	g=GraphTk()
 	p=Points()
 	p.add((1,),1)
 	p.add((2,),2)
