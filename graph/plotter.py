@@ -38,8 +38,8 @@ class LinePlotter(Plotter):
 		for i in points:
 			x=self.gr._x_to_grid(i[0])
 			y=self.gr._y_to_grid(i[1])
-			if not self.gr.xInGraph(x):continue
-			if not self.gr.yInGraph(y):continue
+			if not self.gr._xInGraph(x):continue
+			if not self.gr._yInGraph(y):continue
 			if point==None:point=i
 			else:
 				self.gr.canv.create_line(
@@ -80,8 +80,8 @@ class PointPlotter(Plotter):
 		for i in points:
 			x=self.gr._x_to_grid(i[0])
 			y=self.gr._y_to_grid(i[1])
-			if not self.gr.xInGraph(x):continue
-			if not self.gr.yInGraph(y):continue
+			if not self.gr._xInGraph(x):continue
+			if not self.gr._yInGraph(y):continue
 			self.gr.canv.create_oval(
 				x-self.radius,
 				y-self.radius,

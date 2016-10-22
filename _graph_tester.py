@@ -25,7 +25,7 @@ def main():
 	g.setY((-2,2))
 	g.addXLine(1)
 	g.addYLine(1)
-	g.reGrid(grid=True,autoset=False)
+	g.reGrid(grid=True,autoset=False,marks=12)
 	g.mainloop()
 def main1():
 	g=GraphTk()
@@ -36,10 +36,10 @@ def main1():
 	p.add((4,),2)
 	p.add((5,),1)
 	p.add((6,),0)
-	g.addPlotter(GistPlotter(g,p,'blue','111'))
+	g.addPlotter(GistPlotter(g,p,'blue','111',0.3))
 	g.setX((0,6))
 	g.setY((0,5))
-	g.reGrid(autoset=1)
+	g.reGrid(autoset=1,ymarks=0,xmarks=0,x_mark_list=[0,1,2,3,4,5,6],y_mark_list=[0,1,2,3,4,5,6])
 	g.mainloop()
 if __name__=='__main__':
 	main1()
