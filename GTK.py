@@ -19,9 +19,7 @@ class Plotter:
 	def min(self):return self.pl.min()
 	
 	def max(self):return self.pl.max()
-	
-	def maxN(self):return self.pl.maxN()
-	
+		
 	def plot(self,axis):raise AttributeError
 	
 class LinePlotter(Plotter):
@@ -75,6 +73,28 @@ class PointPlotter(Plotter):
 				tags=self.name
 			)
 		
+class GistPlotter(Plotter):
+	
+	def __init__(self,graph,point_list,color='black',name='noname',dx=1):
+		Plotter.__init__(self,graph,point_list,color,name)
+		self.dx=dx
+		
+	def max(self):return self.pl.maxN()
+	
+	def min(self):return self.pl.minN()
+	
+	def plot(self,axis):
+		points=self.pl.toGist(axis[0])
+		for i in points:
+			self.gr.canv.create_rectangle(
+				self.gr._x_to_grid(i[0]-self.dx/2),
+				self.gr._y_to_grid(i[1]),
+				self.gr._x_to_grid(i[0]+self.dx/2),
+				self.gr._y_to_grid(0),
+				fill=self.clr,
+				tags=self.name
+			)
+		
 class CanvasDescriptor:
 	def __get__(self,ins,own):
 		return ins._Graph__canv
@@ -112,7 +132,7 @@ class Graph:
 	def setAuto(self,axis=(0,1)):
 		mi=self.__plotter_list[0].min()
 		ma=self.__plotter_list[0].max()
-		for i,sign in self.__plotter_list:
+		for i in self.__plotter_list:
 			mi=mi.min(i.min())
 			ma=ma.max(i.max())
 		x=mi[axis[0]],ma[axis[0]]
@@ -262,7 +282,7 @@ class Graph:
 		self.__canv.update()
 		
 	def reGrid(self,axis=(0,1),autoset=True,grid=False):
-		self.__canv.delete('func')
+		self.__canv.delete('noname')
 		if autoset:self.setAuto(axis)
 		self.__x_grid(grid=grid)
 		self.__y_grid(grid=grid)
@@ -270,32 +290,18 @@ class Graph:
 			i.plot(axis)
 		self.__canv.update()
 		
-	def reGist(self,axis=0,dx=1,autoset=True,grid=False):
-		self.__canv.delete('func')
-		if autoset:self.setAutoGist(axis)
-		for j,sign in self.__plotter_list:
-			points=j.toGist(axis)
-			point=None
-			for i in points:
-				self.__canv.create_rectangle(self._x_to_grid(i[0]-dx/2),self._y_to_grid(i[1]),self._x_to_grid(i[0]+dx/2),self._y_to_grid(0),fill=sign,tags='func')
-		self.__x_grid(grid=grid)
-		self.__y_grid(grid=grid)
-		self.__canv.update()
+	#~ def reGist(self,axis=0,dx=1,autoset=True,grid=False):
+		#~ self.__canv.delete('noname')
+		#~ if autoset:self.setAutoGist(axis)
+		#~ for j,sign in self.__plotter_list:
+			#~ points=j.toGist(axis)
+			#~ point=None
+			#~ for i in points:
+				#~ self.__canv.create_rectangle(self._x_to_grid(i[0]-dx/2),self._y_to_grid(i[1]),self._x_to_grid(i[0]+dx/2),self._y_to_grid(0),fill=sign,tags='func')
+		#~ self.__x_grid(grid=grid)
+		#~ self.__y_grid(grid=grid)
+		#~ self.__canv.update()
 		
-	def setAutoGist(self,axis=0):
-		mi=self.__plotter_list[0].min()
-		ma=self.__plotter_list[0].max()
-		#~ ni=self.__point_lists[0][0].minN()
-		na=self.__plotter_list[0].maxN()
-		for i,sign in self.__point_lists:
-			mi=mi.min(i.min())
-			ma=ma.max(i.max())
-			#~ ni=min(ni,i.minN())
-			na=max(na,i.maxN())
-		x=mi[axis],ma[axis]
-		y=0,na
-		self.setX(x)
-		self.setY(y)
 		
 class GraphTk(Toplevel,Graph):
 	
@@ -320,12 +326,8 @@ def main():
 	for i in range(-20,20):
 		p.add((i/10,f(i/10)))
 		p1.add((i/10,f1(i/10)))
-	#~ g=Graph()
 	g.addPlotter(LinePlotter(g,p,'blue','p',2))
 	g.addPlotter(PointPlotter(g,p1,'red','p1',2))
-	#~ g.addPointList(p1,'red')
-	#~ print(p1)
-	#~ g.reGrid(gist=True,axis=0)
 	g.setX((-2,2))
 	g.setY((-2,2))
 	g.addXLine(1)
@@ -340,11 +342,10 @@ def main1():
 	p.add((3,),3)
 	p.add((4,),2)
 	p.add((5,),1)
-	g.addPointList(p,'blue')
+	g.addPlotter(GistPlotter(g,p,'blue'))
 	g.setX((0,6))
 	g.setY((0,5))
-	print(p)
-	g.reGist(autoset=0)
+	g.reGrid(autoset=1)
 	mainloop()
 if __name__=='__main__':
-	main()
+	main1()
