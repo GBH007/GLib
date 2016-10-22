@@ -5,12 +5,37 @@
 #
 from tkinter import *
 from GPG import Points
-#~ class Graph(Toplevel):
-class Graph(Tk):
-	def __init__(self,parrent=None,x=(-25,25),y=(0,100),x_grid_len=500,y_grid_len=500,name='graph'):
-		#~ Toplevel.__init__(self,parrent)
-		Tk.__init__(self)
-		self.title(name)
+
+class Plotter:
+	
+	def __init__(self,graph,point_list,color='black',name='noname'):
+		self.gr=graph
+		self.pl=point_list
+		self.clr=color
+		self.name=name
+	
+	def getName(self)return self.name
+	
+	def min(self)return self.pl.min()
+	
+	def max(self)return self.pl.max()
+	
+	def plot(self,axis):raise AttributeError
+	
+class LinePlotter(Plotter):
+	
+	def plot(self,axis):
+		pass
+		
+class CanvasDescriptor:
+	def __get__(self,ins,own):
+		return ins._Graph__canv
+
+class Graph:
+	
+	canv=CanvasDescriptor()
+	
+	def __init__(self,x=(-25,25),y=(0,100),x_grid_len=500,y_grid_len=500):
 		self.__x=x
 		self.__y=y
 		self.__x_grid_len=x_grid_len
@@ -20,17 +45,20 @@ class Graph(Tk):
 		self.__x_grid()
 		self.__y_grid()
 		self.__canv.pack()
+		
 	def addPointList(self,point_list,sign='green'):
 		self.__point_lists.append((point_list,sign))
+		
 	def delPointList(self,point_list):
 		for i in self.__point_lists:
 			if point_list is i[0]:
 				self.__point_lists.remove(i)
 				break
-	def setX(self,x):
-		self.__x=x
-	def setY(self,y):
-		self.__y=y
+				
+	def setX(self,x):self.__x=x
+		
+	def setY(self,y):self.__y=y
+		
 	def setAuto(self,axis=(0,1)):
 		mi=self.__point_lists[0][0].min()
 		ma=self.__point_lists[0][0].max()
@@ -41,14 +69,19 @@ class Graph(Tk):
 		y=mi[axis[1]],ma[axis[1]]
 		self.setX(x)
 		self.setY(y)
+		
 	def _x_func(self,i):
 		return (self.__x[1]-self.__x[0])/self.__x_grid_len*i+self.__x[0]
+		
 	def _y_func(self,i):
 		return (self.__y[1]-self.__y[0])/self.__y_grid_len*(self.__y_grid_len-i)+self.__y[0]
+		
 	def _x_to_grid(self,x):
 		return int((x-self.__x[0])/(self.__x[1]-self.__x[0])*self.__x_grid_len)
+		
 	def _y_to_grid(self,y):
 		return int(self.__y_grid_len-(y-self.__y[0])/(self.__y[1]-self.__y[0])*self.__y_grid_len)
+		
 	def __x_grid(self,marks=10,grid=False):
 		self.__canv.delete('xgrid')
 		for i in range(marks):
@@ -59,6 +92,7 @@ class Graph(Tk):
 			#~ self.__canv.create_text(xg,self.__y_grid_len-20,text=str(self._x_func(xg)),fill='red',tags='xgrid')
 			self.__canv.create_text(xg,self.__y_grid_len-10,text='{0:4.2f}'.format(self._x_func(xg)),fill='black',tags='xgrid',anchor=S)
 		self.__canv.update()
+		
 	def __y_grid(self,marks=10,grid=False):
 		self.__canv.delete('ygrid')
 		for i in range(marks):
@@ -69,24 +103,30 @@ class Graph(Tk):
 			#~ self.__canv.create_text(20,yg,text=str(self._y_func(yg)),fill='red',tags='ygrid')
 			self.__canv.create_text(10,yg,text='{0:4.2f}'.format(self._y_func(yg)),fill='black',tags='ygrid',anchor=W)
 		self.__canv.update()
+		
 	def addXLine(self,x,clr='black'):
 		self.__canv.create_line(self._x_to_grid(x),self.__y_grid_len,self._x_to_grid(x),0,width=0.2,fill=clr,tags='xline',dash=(20,10))
 		self.__canv.update()
+		
 	def addYLine(self,y,clr='black'):
 		self.__canv.create_line(0,self._y_to_grid(y),self.__x_grid_len,self._y_to_grid(y),width=0.2,fill=clr,tags='yline',dash=(20,10))
 		self.__canv.update()
+		
 	def clearXLine(self):
 		self.__canv.delete('xline')
 		self.__canv.update()
+		
 	def addPoint(self,x,y,clr='black',r=3):
 		x1=self._x_to_grid(x)
 		y1=self._y_to_grid(y)
 		r/=2
 		self.__canv.create_oval(x1-r,y1-r,x1+r,y1+r,fill=clr,tags='point')
 		self.__canv.update()
+		
 	def clearYLine(self):
 		self.__canv.delete('yline')
 		self.__canv.update()
+		
 	def reGrid(self,axis=(0,1),autoset=True,grid=False):
 		self.__canv.delete('func')
 		if autoset:self.setAuto(axis)
@@ -101,6 +141,7 @@ class Graph(Tk):
 					self.__canv.create_line(self._x_to_grid(point[0]),self._y_to_grid(point[1]),self._x_to_grid(i[0]),self._y_to_grid(i[1]),width=1,fill=sign,tags='func')
 					point=i
 		self.__canv.update()
+		
 	def reGist(self,axis=0,dx=1,autoset=True,grid=False):
 		self.__canv.delete('func')
 		if autoset:self.setAutoGist(axis)
@@ -112,6 +153,7 @@ class Graph(Tk):
 		self.__x_grid(grid=grid)
 		self.__y_grid(grid=grid)
 		self.__canv.update()
+		
 	def setAutoGist(self,axis=0):
 		mi=self.__point_lists[0][0].min()
 		ma=self.__point_lists[0][0].max()
@@ -126,6 +168,21 @@ class Graph(Tk):
 		y=0,na
 		self.setX(x)
 		self.setY(y)
+		
+class GraphTk(Toplevel,Graph):
+	
+	def __init__(self,parrent=None,x=(-25,25),y=(0,100),x_grid_len=500,y_grid_len=500,name='graph'):
+		Toplevel.__init__(self,parrent)
+		Graph.__init__(self,x=x,y=y,x_grid_len=x_grid_len,y_grid_len=y_grid_len)
+		self.title(name)
+		
+class GraphTk(Tk,Graph):
+	
+	def __init__(self,parrent=None,x=(-25,25),y=(0,100),x_grid_len=500,y_grid_len=500,name='graph'):
+		Tk.__init__(self)
+		Graph.__init__(self,x=x,y=y,x_grid_len=x_grid_len,y_grid_len=y_grid_len)
+		self.title(name)
+		
 def main():
 	g=Graph()
 	p=Points()
