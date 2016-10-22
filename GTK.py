@@ -34,13 +34,17 @@ class LinePlotter(Plotter):
 		points=self.pl.toPlot(axis)
 		point=None
 		for i in points:
+			x=self.gr._x_to_grid(i[0])
+			y=self.gr._y_to_grid(i[1])
+			if not self.gr.xInGraph(x):continue
+			if not self.gr.yInGraph(y):continue
 			if point==None:point=i
 			else:
 				self.gr.canv.create_line(
 					self.gr._x_to_grid(point[0]),
 					self.gr._y_to_grid(point[1]),
-					self.gr._x_to_grid(i[0]),
-					self.gr._y_to_grid(i[1]),
+					x,
+					y,
 					width=self.width,
 					fill=self.clr,
 					tags=self.name
@@ -59,6 +63,8 @@ class PointPlotter(Plotter):
 		for i in points:
 			x=self.gr._x_to_grid(i[0])
 			y=self.gr._y_to_grid(i[1])
+			if not self.gr.xInGraph(x):continue
+			if not self.gr.yInGraph(y):continue
 			self.gr.canv.create_oval(
 				x-self.radius,
 				y-self.radius,
@@ -85,7 +91,7 @@ class Graph:
 		self.__x_indent=100
 		self.__y_indent=100
 		self.__plotter_list=[]
-		self.__canv=Canvas(self,width=self.__x_grid_len+self.__x_indent,height=self.__y_grid_len+self.__y_indent)
+		self.__canv=Canvas(self,width=self.__x_grid_len+self.__x_indent+100,height=self.__y_grid_len+self.__y_indent+100)
 		self.__x_grid()
 		self.__y_grid()
 		self.__canv.pack()
@@ -124,15 +130,24 @@ class Graph:
 		return int((x-self.__x[0])/(self.__x[1]-self.__x[0])*self.__x_grid_len)+self.__x_indent
 		
 	def _y_to_grid(self,y):
-		return int(self.__y_grid_len-(y-self.__y[0])/(self.__y[1]-self.__y[0])*self.__y_grid_len)
+		return int(self.__y_grid_len-(y-self.__y[0])/(self.__y[1]-self.__y[0])*self.__y_grid_len)+self.__y_indent
 		
 	def __x_grid(self,marks=10,grid=False):
 		self.__canv.delete('xgrid')
 		self.__canv.create_line(
+			self.__x_indent,
+			self.__y_grid_len+self.__y_indent,
+			self.__x_grid_len+self.__x_indent,
+			self.__y_grid_len+self.__y_indent,
+			width=2,
+			fill='black',
+			tags='xgrid'
+		)
+		self.__canv.create_line(
+			self.__x_indent,
 			self.__y_indent,
-			self.__y_grid_len,
-			self.__x_grid_len+self.__y_indent,
-			self.__y_grid_len,
+			self.__x_grid_len+self.__x_indent,
+			self.__y_indent,
 			width=2,
 			fill='black',
 			tags='xgrid'
@@ -142,17 +157,17 @@ class Graph:
 			if not xg:continue
 			if grid:
 				self.__canv.create_line(
-					xg+self.__y_indent,
-					self.__y_grid_len,
-					xg+self.__y_indent,
-					0,
+					xg+self.__x_indent,
+					self.__y_grid_len+self.__y_indent,
+					xg+self.__x_indent,
+					self.__y_indent,
 					width=0.2,
 					fill='gray',
 					tags='xgrid'
 				)
 			self.__canv.create_text(
-				xg+self.__y_indent,
-				self.__y_grid_len+10,
+				xg+self.__x_indent,
+				self.__y_grid_len+10+self.__y_indent,
 				text='{0:4.2f}'.format(self._x_func(xg)),
 				fill='black',
 				tags='xgrid',
@@ -162,10 +177,19 @@ class Graph:
 	def __y_grid(self,marks=10,grid=False):
 		self.__canv.delete('ygrid')
 		self.__canv.create_line(
+			self.__x_indent,
 			self.__y_indent,
-			0,
+			self.__x_indent,
+			self.__y_grid_len+self.__y_indent,
+			width=2,
+			fill='black',
+			tags='ygrid'
+		)
+		self.__canv.create_line(
+			self.__x_indent+self.__x_grid_len,
 			self.__y_indent,
-			self.__y_grid_len,
+			self.__x_indent+self.__x_grid_len,
+			self.__y_grid_len+self.__y_indent,
 			width=2,
 			fill='black',
 			tags='ygrid'
@@ -175,17 +199,17 @@ class Graph:
 			if not yg:continue
 			if grid:
 				self.__canv.create_line(
-					self.__y_indent,
-					yg,
-					self.__x_grid_len+self.__y_indent,
-					yg,
+					self.__x_indent,
+					yg+self.__y_indent,
+					self.__x_grid_len+self.__x_indent,
+					yg+self.__y_indent,
 					width=0.2,
 					fill='gray',
 					tags='ygrid'
 				)
 			self.__canv.create_text(
-				self.__y_indent-10,
-				yg,
+				self.__x_indent-10,
+				yg+self.__y_indent,
 				text='{0:4.2f}'.format(self._y_func(yg)),
 				fill='black',
 				tags='ygrid',
@@ -194,12 +218,40 @@ class Graph:
 		self.__canv.update()
 		
 	def addXLine(self,x,clr='black'):
-		self.__canv.create_line(self._x_to_grid(x),self.__y_grid_len,self._x_to_grid(x),0,width=0.2,fill=clr,tags='xline',dash=(20,10))
+		self.__canv.create_line(
+			self._x_to_grid(x),
+			self.__y_grid_len+self.__y_indent,
+			self._x_to_grid(x),
+			self.__y_indent,
+			width=0.2,
+			fill=clr,
+			tags='xline',
+			dash=(20,10)
+		)
 		self.__canv.update()
 		
 	def addYLine(self,y,clr='black'):
-		self.__canv.create_line(0,self._y_to_grid(y),self.__x_grid_len,self._y_to_grid(y),width=0.2,fill=clr,tags='yline',dash=(20,10))
+		self.__canv.create_line(
+			self.__x_indent,
+			self._y_to_grid(y),
+			self.__x_grid_len+self.__x_indent,
+			self._y_to_grid(y),
+			width=0.2,
+			fill=clr,
+			tags='yline',
+			dash=(20,10)
+		)
 		self.__canv.update()
+		
+	def xInGraph(self,x):
+		if self.__x_indent<x<self.__x_indent+self.__x_grid_len:
+			return True
+		return False
+		
+	def yInGraph(self,y):
+		if self.__y_indent<y<self.__y_indent+self.__y_grid_len:
+			return True
+		return False
 		
 	def clearXLine(self):
 		self.__canv.delete('xline')
