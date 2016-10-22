@@ -3,3 +3,6 @@
 #           Gregoriy Nikonirov
 # email:    mrgbh007@gmail.com
 #
+
+from GLib.graph import *
+from GLib.point import *
