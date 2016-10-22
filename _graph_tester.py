@@ -40,4 +40,4 @@ def main1():
 	g.reGrid(autoset=1)
 	g.mainloop()
 if __name__=='__main__':
-	main1()
+	main()
