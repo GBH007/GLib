@@ -90,7 +90,7 @@ class GistPlotter(Plotter):
 				self.gr._x_to_grid(i[0]-self.dx/2),
 				self.gr._y_to_grid(i[1]),
 				self.gr._x_to_grid(i[0]+self.dx/2),
-				self.gr._y_to_grid(0),
+				self.gr._y_to_grid(self.gr.getY()[0]),
 				fill=self.clr,
 				tags=self.name
 			)

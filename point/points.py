@@ -142,9 +142,11 @@ class Points:
 		return m
 		
 	def minN(self):
-		m=self.__points[0][1]
+		n=self.__points[0][1]
 		for i in self.__points:
-			m=min(i[1],m)
+			n=min(i[1],n)
+		m=self.min()
+		m.setCord(m.getCord()+(n,))
 		return m
 		
 	def max(self):
@@ -154,9 +156,11 @@ class Points:
 		return m
 		
 	def maxN(self):
-		m=self.__points[0][1]
+		n=self.__points[0][1]
 		for i in self.__points:
-			m=max(i[1],m)
+			n=max(i[1],n)
+		m=self.max()
+		m.setCord(m.getCord()+(n,))
 		return m
 		
 	def centralMoment(self,k=2):

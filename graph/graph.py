@@ -40,6 +40,10 @@ class Graph:
 	def setX(self,x):self.__x=x
 		
 	def setY(self,y):self.__y=y
+				
+	def getX(self):return self.__x
+		
+	def getY(self):return self.__y
 		
 	def setAuto(self,axis=(0,1)):
 		mi=self.__plotter_list[0].min()

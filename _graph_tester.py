@@ -3,9 +3,10 @@
 #           Gregoriy Nikonirov
 # email:    mrgbh007@gmail.com
 #
-
-from graph import *
-from point import *
+import sys
+sys.path.append('/home/gbh007/Dropbox/python/lib')
+from GLib.graph import *
+from GLib.point import *
 		
 def main():
 	g=GraphTk()
@@ -23,7 +24,7 @@ def main():
 	g.addXLine(1)
 	g.addYLine(1)
 	g.reGrid(grid=True,autoset=False)
-	mainloop()
+	g.mainloop()
 def main1():
 	g=GraphTk()
 	p=Points()
@@ -32,10 +33,11 @@ def main1():
 	p.add((3,),3)
 	p.add((4,),2)
 	p.add((5,),1)
+	p.add((6,),0)
 	g.addPlotter(GistPlotter(g,p,'blue'))
 	g.setX((0,6))
 	g.setY((0,5))
 	g.reGrid(autoset=1)
-	mainloop()
+	g.mainloop()
 if __name__=='__main__':
 	main1()
