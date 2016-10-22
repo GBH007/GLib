@@ -3,7 +3,7 @@
 #           Gregoriy Nikonirov
 # email:    mrgbh007@gmail.com
 #
-from GMatrix import Matrix
+from matrix import Matrix
 class Function:
 	def __init__(self,dx=0.001,func=lambda *x: 0):
 		self.__dx=dx
@@ -26,10 +26,8 @@ class Function:
 def _newton(x,func,e=(0.2,0.15)):
 	xm=Matrix(vrow=x)
 	_h=~func.getHesse(x)
-	#~ print(_h)
 	f3=lambda *x: (func.calcDy((0,),x),func.calcDy((1,),x))
 	x1=round(xm-Matrix(vrow=f3(*x))*_h,5)
-	#~ print(x1)
 	if (x1-xm).getRadius()<e[0] or abs(func.calcF(x1.getList())-func.calcF(x))<e[1]:
 		return x1.getList()
 	else:
