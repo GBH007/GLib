@@ -36,10 +36,10 @@ def main1():
 	p.add((4,),2)
 	p.add((5,),1)
 	p.add((6,),0)
-	g.addPlotter(GistPlotter(g,p,'blue'))
+	g.addPlotter(GistPlotter(g,p,'blue','111'))
 	g.setX((0,6))
 	g.setY((0,5))
 	g.reGrid(autoset=1)
 	g.mainloop()
 if __name__=='__main__':
-	main()
+	main1()

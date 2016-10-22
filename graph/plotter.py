@@ -129,3 +129,19 @@ class GistPlotter(Plotter):
 				fill=self.clr,
 				tags=self.name
 			)
+
+	def plotLegend(self,x,y):
+		self.gr.canv.create_text(
+			x+10,
+			y,
+			text=self.name,
+			anchor=W,
+		)
+		for i in range(3):
+			self.gr.canv.create_rectangle(
+				x-20-i*10,
+				y-5*i,
+				x-10-i*10,
+				y+5,
+				fill=self.clr
+			)
