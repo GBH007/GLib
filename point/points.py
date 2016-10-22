@@ -107,6 +107,7 @@ class Points:
 		for i in self.__points:
 			if i[0]==point:
 				i[1]=n
+				break
 				
 	def __delitem__(self,point):
 		for i in self.__points:
@@ -185,6 +186,20 @@ class Points:
 		for i in self.__points:
 			s.append([i[0][axis],i[1]])
 		return s
+		
+	def getMinDc(self,axis):
+		m=self.__points[1][0][axis]-self.__points[0][0][axis]
+		n=len(self)
+		for i in range(2,n):
+			if self.__points[i][0][axis]-self.__points[i-1][0][axis]<m:
+				m=self.__points[i][0][axis]-self.__points[i-1][0][axis]
+		return m
+		
+	def sort(self,axis=0):
+		self.__points.sort(key=lambda e:e[axis])
+		
+	def __len__(self):
+		return len(self.__points)
 		
 	def __iter__(self):
 		return iter(self.__points)

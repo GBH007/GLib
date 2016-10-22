@@ -8,6 +8,7 @@ from tkinter import *
 __all__=['GraphToplevel','GraphTk']
 
 class CanvasDescriptor:
+	
 	def __get__(self,ins,own):
 		return ins._Graph__canv
 
@@ -118,6 +119,16 @@ class Graph:
 			for i in mark_list:
 				x=self._x_to_grid(i)
 				if not self._xInGraph(x):continue
+				if grid:
+					self.__canv.create_line(
+						x,
+						self.__y_grid_len+self.__y_indent,
+						x,
+						self.__y_indent,
+						width=0.2,
+						fill='gray',
+						tags='xgrid'
+					)
 				self.__canv.create_text(
 					x,
 					self.__y_grid_len+10+self.__y_indent,
@@ -173,6 +184,16 @@ class Graph:
 			for i in mark_list:
 				y=self._y_to_grid(i)
 				if not self._yInGraph(y):continue
+				if grid:
+					self.__canv.create_line(
+						self.__x_indent,
+						y,
+						self.__x_grid_len+self.__x_indent,
+						y,
+						width=0.2,
+						fill='gray',
+						tags='ygrid'
+					)
 				self.__canv.create_text(
 					self.__x_indent-10,
 					y,

@@ -110,7 +110,7 @@ class PointPlotter(Plotter):
 		
 class GistPlotter(Plotter):
 	
-	def __init__(self,graph,point_list,color='black',name='noname',dx=1):
+	def __init__(self,graph,point_list,color='black',name='noname',dx=None):
 		Plotter.__init__(self,graph,point_list,color,name)
 		self.dx=dx
 		
@@ -120,6 +120,8 @@ class GistPlotter(Plotter):
 	
 	def plot(self,axis):
 		points=self.pl.toGist(axis[0])
+		if not self.dx:
+			self.dx=self.pl.getMinDc(axis[0])
 		for i in points:
 			self.gr.canv.create_rectangle(
 				self.gr._x_to_grid(i[0]-self.dx/2),
