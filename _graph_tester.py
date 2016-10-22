@@ -5,8 +5,9 @@
 #
 import sys
 sys.path.append('/home/gbh007/Dropbox/python/lib')
-from GLib.graph import *
-from GLib.point import *
+#~ from GLib.graph import *
+#~ from GLib.point import *
+from GLib import *
 		
 def main():
 	g=GraphTk()
@@ -18,6 +19,7 @@ def main():
 		p.add((i/10,f(i/10)))
 		p1.add((i/10,f1(i/10)))
 	g.addPlotter(LinePlotter(g,p,'blue','p',2))
+	g.addPlotter(LinePlotter(g,p1,'green','p11',0.5))
 	g.addPlotter(PointPlotter(g,p1,'red','p1',2))
 	g.setX((-2,2))
 	g.setY((-2,2))

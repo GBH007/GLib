@@ -21,9 +21,10 @@ class Graph:
 		self.__x_grid_len=x_grid_len
 		self.__y_grid_len=y_grid_len
 		self.__x_indent=100
-		self.__y_indent=100
+		self.__y_indent=10
+		self.__y_down_indent=50
 		self.__plotter_list=[]
-		self.__canv=Canvas(self,width=self.__x_grid_len+self.__x_indent+100,height=self.__y_grid_len+self.__y_indent+100)
+		self.__canv=Canvas(self,width=self.__x_grid_len+self.__x_indent,height=self.__y_grid_len+self.__y_indent+self.__y_down_indent)
 		self.__x_grid()
 		self.__y_grid()
 		self.__canv.pack()
@@ -107,7 +108,8 @@ class Graph:
 				text='{0:4.2f}'.format(self._x_func(xg)),
 				fill='black',
 				tags='xgrid',
-				anchor=N)
+				anchor=N
+			)
 		self.__canv.update()
 		
 	def __y_grid(self,marks=10,grid=False):
@@ -197,13 +199,19 @@ class Graph:
 		self.__canv.delete('yline')
 		self.__canv.update()
 		
-	def reGrid(self,axis=(0,1),autoset=True,grid=False):
+	def reGrid(self,axis=(0,1),autoset=True,grid=False,legend=True):
 		self.__canv.delete('noname')
+		if legend:
+			self.__canv.config(height=self.__y_grid_len+self.__y_indent+self.__y_down_indent+20*len(self.__plotter_list))
+			self.config(height=self.__y_grid_len+self.__y_indent+self.__y_down_indent+20*len(self.__plotter_list))
+			self.update()
 		if autoset:self.setAuto(axis)
 		self.__x_grid(grid=grid)
 		self.__y_grid(grid=grid)
-		for i in self.__plotter_list:
-			i.plot(axis)
+		for i,plotter in enumerate(self.__plotter_list):
+			plotter.plot(axis)
+			if legend:
+				plotter.plotLegend(self.__x_indent,self.__y_grid_len+self.__y_indent+self.__y_down_indent+20*i)
 		self.__canv.update()
 		
 class GraphToplevel(Toplevel,Graph):

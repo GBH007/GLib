@@ -4,6 +4,8 @@
 # email:    mrgbh007@gmail.com
 #
 
+from tkinter import *
+
 __all__=['LinePlotter','PointPlotter','GistPlotter']
 
 class Plotter:
@@ -21,6 +23,8 @@ class Plotter:
 	def max(self):return self.pl.max()
 		
 	def plot(self,axis):raise AttributeError
+	
+	def plotLegend(self,x,y):raise AttributeError
 	
 class LinePlotter(Plotter):
 	
@@ -48,6 +52,21 @@ class LinePlotter(Plotter):
 					tags=self.name
 				)
 				point=i
+				
+	def plotLegend(self,x,y):
+		self.gr.canv.create_text(
+			x+10,
+			y,
+			text=self.name,
+			anchor=W,
+		)
+		self.gr.canv.create_line(
+			x-10,
+			y,
+			x-60,
+			y,
+			fill=self.clr
+		)
 	
 class PointPlotter(Plotter):
 	
@@ -71,6 +90,22 @@ class PointPlotter(Plotter):
 				fill=self.clr,
 				width=0,
 				tags=self.name
+			)
+				
+	def plotLegend(self,x,y):
+		self.gr.canv.create_text(
+			x+10,
+			y,
+			text=self.name,
+			anchor=W,
+		)
+		for i in range(3):
+			self.gr.canv.create_oval(
+				x-20-i*15,
+				y-5,
+				x-10-i*15,
+				y+5,
+				fill=self.clr
 			)
 		
 class GistPlotter(Plotter):
