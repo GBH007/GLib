@@ -4,6 +4,8 @@
 # email:    mrgbh007@gmail.com
 #
 
+__all__=['HTMLReportGenerator']
+
 class ReportGenerator:
 	
 	def __init__(self,name='report'):
@@ -47,6 +49,9 @@ class HTMLReportGenerator(ReportGenerator):
 			border: 2px solid black;
 			text-align: center;
 		}
+		tr:hover{
+			background-color: yellow;
+		}
 		.selected{
 			border: 2px solid red;
 			background-color: red;
@@ -86,16 +91,16 @@ class HTMLReportGenerator(ReportGenerator):
 		ReportGenerator.commitAndExit(self)
 		
 def main():
-	a=TXTReportGenerator('report.txt')
-	b=HTMLReportGenerator('report.html')
+	#~ a=TXTReportGenerator('/home/gbh007/report.txt')
+	b=HTMLReportGenerator('/home/gbh007/report.html')
 	txt='hello world!'
 	table=[['-'*(i+j+1) for j in range(4)] for i in range(5)]
-	a.addText(txt)
+	#~ a.addText(txt)
 	b.addText(txt)
-	a.addTable(table)
-	#~ b.addTable(table,selected_row=[1,4],selected_rc=[(0,1)],selected_col=[0])
+	#~ a.addTable(table)
+	b.addTable(table,selected_row=[1,4],selected_rc=[(0,1)],selected_col=[0])
 	b.addTable(table)
-	a.commitAndExit()
+	#~ a.commitAndExit()
 	b.commitAndExit()
 
 if __name__=='__main__':
