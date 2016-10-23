@@ -6,3 +6,4 @@
 
 from GLib.graph import *
 from GLib.point import *
+from GLib.reportgenerator import HTMLReportGenerator

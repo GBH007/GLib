@@ -4,7 +4,10 @@
 # email:    mrgbh007@gmail.com
 #
 
-from reportgenerator import *
+import sys
+sys.path.append('/home/gbh007/Dropbox/python/lib')
+from GLib import *
+#~ from reportgenerator import *
 
 def main():
 	#~ a=TXTReportGenerator('/home/gbh007/report.txt')
