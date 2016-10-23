@@ -4,6 +4,6 @@
 # email:    mrgbh007@gmail.com
 #
 
-from GLib.graph import *
-from GLib.point import *
-from GLib.reportgenerator import HTMLReportGenerator
+from .graph import *
+from .point import *
+from .reportgenerator import HTMLReportGenerator

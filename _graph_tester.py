@@ -25,7 +25,7 @@ def main():
 	g.setY((-2,2))
 	g.addXLine(1)
 	g.addYLine(1)
-	g.reGrid(grid=True,autoset=False,marks=12)
+	g.reGrid(grid=True,autoset=False)
 	g.mainloop()
 def main1():
 	g=GraphTk()
@@ -45,4 +45,4 @@ def main1():
 	g.reGrid(autoset=1,ymarks=0,xmarks=0,x_mark_list=range(-10,10,3),y_mark_list=range(0,12),grid=1)
 	g.mainloop()
 if __name__=='__main__':
-	main1()
+	main()
