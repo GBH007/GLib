@@ -9,11 +9,14 @@ from ..report import ReportGenerator
 __all__=['TXTReportGenerator']
 
 class TXTReportGenerator(ReportGenerator):
+	'''класс для отчетов в txt файле'''
 	
 	def addText(self,text,end='\n'):
+		'''добавляет текст в файл отчета записывает в конец end'''
 		print(text,end=end,file=self.report)
 		
 	def addTable(self,table,end='\n'):
+		'''добавляет таблицу в файл отчета записывает в конец end'''
 		stable=[[str(i) for i in s] for s in table]
 		mlen=max(max(len(j) for j in i) for i in stable)
 		ylen=len(stable)

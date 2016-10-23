@@ -3,21 +3,34 @@
 #           Gregoriy Nikonirov
 # email:    mrgbh007@gmail.com
 #
-from matrix import Matrix
+from .matrix import Matrix
+
+__all__=['Function']
 
 class Function:
+	'''класс для работы с численными производными'''
 	
 	def __init__(self,dx=0.001,func=lambda *x: 0):
+		'''конструктор принимает шаг дифференцирования dx
+		функцию для дифференцирования func вида f(*x)'''
 		self.__dx=dx
 		self.__f=func
 		
-	def setDx(self,dx):self.__dx=dx
+	def setDx(self,dx):
+		'''устанавливает шаг диффиренцирования'''
+		self.__dx=dx
 	
-	def getDx(self):return self.__dx
+	def getDx(self):
+		'''возвращает шаг диффиренцирования'''
+		return self.__dx
 	
-	def setF(self,f):self.__f=f
+	def setF(self,f):
+		'''устанавливает функцию для дифференцирования'''
+		self.__f=f
 	
 	def calcDy(self,list_dx,x):
+		'''возвращает производную фунции в точке x
+		где list_dx кортеж индексов диффиренцирования по переменой'''
 		x1=[j+self.__dx if i==list_dx[0] else j for i,j in enumerate(x)]
 		x2=[j-self.__dx if i==list_dx[0] else j for i,j in enumerate(x)]
 		if len(list_dx)==1:
@@ -26,9 +39,12 @@ class Function:
 			return (self.calcDy(list_dx[1:],x1)-self.calcDy(list_dx[1:],x2))/(self.__dx*2)
 			
 	def getHesse(self,x):
+		'''возвращает матрицу Гессе для функции в точке x'''
 		return Matrix([[self.calcDy((i,j),x) for j in range(len(x))] for i in range(len(x))])
 		
-	def calcF(self,x):return self.__f(*x)
+	def calcF(self,x):
+		'''возвращает значение функции в точке x'''
+		return self.__f(*x)
 
 def _newton(x,func,e=(0.2,0.15)):
 	xm=Matrix(vrow=x)
