@@ -5,6 +5,7 @@
 #
 
 from ..report import ReportGenerator
+from .html_template import *
 
 __all__=['HTMLReportGenerator']
 
@@ -12,32 +13,7 @@ class HTMLReportGenerator(ReportGenerator):
 	
 	def __init__(self,name):
 		ReportGenerator.__init__(self,name)
-		tmpl='''<html><head>
-		<style type="text/css">
-		.table{
-			border: 2px solid black;
-			text-align: center;
-		}
-		tr:hover{
-			background-color: yellow;
-		}
-		.selected{
-			border: 2px solid red;
-			background-color: red;
-		}
-		.r0{
-			background-color: #BFBFBF;
-		}
-		.r1{
-			background-color: white;
-		}
-		.None{
-		}
-		.text{
-		}
-		</style>
-		<title>Report</title>
-		</head><body>'''
+		tmpl=main_template
 		print(tmpl,file=self.report)
 			
 	def addText(self,text,tag='text'):
