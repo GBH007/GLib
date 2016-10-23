@@ -16,6 +16,7 @@ def main():
 	#~ a.addTable(table)
 	b.addTable(table,selected_row=[1,4],selected_rc=[(0,1)],selected_col=[0])
 	b.addTable(table)
+	b.addTable(table,col_names=['col {0}'.format(i) for i in range(10)],row_names=['row {0}'.format(i) for i in range(10)],table_name='tttt')
 	#~ a.commitAndExit()
 	b.commitAndExit()
 

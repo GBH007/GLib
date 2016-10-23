@@ -16,13 +16,16 @@ end_template='''</body></html>'''
 css_template='''
 .table{
 	border: 2px solid black;
+	border-collapse: collapse;
 	text-align: center;
+}
+td{
+	border: 1px solid black;
 }
 tr:hover{
 	background-color: yellow;
 }
 .selected{
-	border: 2px solid red;
 	background-color: red;
 }
 .r0{
