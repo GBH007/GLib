@@ -4,40 +4,9 @@
 # email:    mrgbh007@gmail.com
 #
 
-__all__=['HTMLReportGenerator']
+from ..report import ReportGenerator
 
-class ReportGenerator:
-	
-	def __init__(self,name='report'):
-		self.report=open(name,'w')
-		
-	def addText(self,text,end='\n'):
-		pass
-		
-	def addTable(self,table,end='\n'):
-		pass
-		
-	def commitAndExit(self):
-		self.report.close()
-		
-class TXTReportGenerator(ReportGenerator):
-	
-	def addText(self,text,end='\n'):
-		print(text,end=end,file=self.report)
-		
-	def addTable(self,table,end='\n'):
-		stable=[[str(i) for i in s] for s in table]
-		mlen=max(max(len(j) for j in i) for i in stable)
-		ylen=len(stable)
-		xlen=len(stable[0])
-		sep='-'*((1+mlen)*xlen+1)
-		tmpl='|{0:'+str(xlen)+'}'
-		print(sep,file=self.report)
-		for i,ei in enumerate(stable):
-			for j,ej in enumerate(ei):
-				print(tmpl.format(ej),end='',file=self.report)
-			print('|',file=self.report)
-			print(sep,file=self.report)
+__all__=['HTMLReportGenerator']
 
 class HTMLReportGenerator(ReportGenerator):
 	
@@ -70,8 +39,7 @@ class HTMLReportGenerator(ReportGenerator):
 		<title>Report</title>
 		</head><body>'''
 		print(tmpl,file=self.report)
-		
-		
+			
 	def addText(self,text,tag='text'):
 		print('<div class="{tag}">{0}</div>'.format(text,tag=tag),file=self.report)
 		
@@ -90,18 +58,4 @@ class HTMLReportGenerator(ReportGenerator):
 		print('</body></html>',file=self.report)
 		ReportGenerator.commitAndExit(self)
 		
-def main():
-	#~ a=TXTReportGenerator('/home/gbh007/report.txt')
-	b=HTMLReportGenerator('/home/gbh007/report.html')
-	txt='hello world!'
-	table=[['-'*(i+j+1) for j in range(4)] for i in range(5)]
-	#~ a.addText(txt)
-	b.addText(txt)
-	#~ a.addTable(table)
-	b.addTable(table,selected_row=[1,4],selected_rc=[(0,1)],selected_col=[0])
-	b.addTable(table)
-	#~ a.commitAndExit()
-	b.commitAndExit()
 
-if __name__=='__main__':
-	main()
