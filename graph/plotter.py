@@ -51,6 +51,7 @@ class LinePlotter(Plotter):
 		self.width=width
 	
 	def plot(self,axis):
+		self.gr.canv.delete(self.name)
 		points=self.pl.toPlot(axis)
 		point=None
 		for i in points:
@@ -77,13 +78,15 @@ class LinePlotter(Plotter):
 			y,
 			text=self.name,
 			anchor=W,
+			tags=self.name
 		)
 		self.gr.canv.create_line(
 			x-10,
 			y,
 			x-60,
 			y,
-			fill=self.clr
+			fill=self.clr,
+			tags=self.name
 		)
 	
 class PointPlotter(Plotter):
@@ -97,6 +100,7 @@ class PointPlotter(Plotter):
 		self.radius=radius
 	
 	def plot(self,axis):
+		self.gr.canv.delete(self.name)
 		points=self.pl.toPlot(axis)
 		point=None
 		for i in points:
@@ -120,6 +124,7 @@ class PointPlotter(Plotter):
 			y,
 			text=self.name,
 			anchor=W,
+			tags=self.name
 		)
 		for i in range(3):
 			self.gr.canv.create_oval(
@@ -127,7 +132,8 @@ class PointPlotter(Plotter):
 				y-5,
 				x-10-i*15,
 				y+5,
-				fill=self.clr
+				fill=self.clr,
+				tags=self.name
 			)
 		
 class GistPlotter(Plotter):
@@ -145,6 +151,7 @@ class GistPlotter(Plotter):
 	def min(self):return self.pl.minN()
 	
 	def plot(self,axis):
+		self.gr.canv.delete(self.name)
 		points=self.pl.toGist(axis[0])
 		if not self.dx:
 			self.dx=self.pl.getMinDc(axis[0])
@@ -164,6 +171,7 @@ class GistPlotter(Plotter):
 			y,
 			text=self.name,
 			anchor=W,
+			tags=self.name
 		)
 		for i in range(3):
 			self.gr.canv.create_rectangle(
@@ -171,5 +179,6 @@ class GistPlotter(Plotter):
 				y-5*i,
 				x-10-i*10,
 				y+5,
-				fill=self.clr
+				fill=self.clr,
+				tags=self.name
 			)
