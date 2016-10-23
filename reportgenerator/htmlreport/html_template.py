@@ -4,9 +4,16 @@
 # email:    mrgbh007@gmail.com
 #
 
-main_template='''
+start_template='''
 <html><head>
 <style type="text/css">
+{css}
+</style>
+<title>Report</title>
+</head><body>
+'''
+end_template='''</body></html>'''
+css_template='''
 .table{
 	border: 2px solid black;
 	text-align: center;
@@ -28,7 +35,4 @@ tr:hover{
 }
 .text{
 }
-</style>
-<title>Report</title>
-</head><body>
 '''

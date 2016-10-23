@@ -13,8 +13,7 @@ class HTMLReportGenerator(ReportGenerator):
 	
 	def __init__(self,name):
 		ReportGenerator.__init__(self,name)
-		tmpl=main_template
-		print(tmpl,file=self.report)
+		print(start_template.format(css=css_template),file=self.report)
 			
 	def addText(self,text,tag='text'):
 		print('<div class="{tag}">{0}</div>'.format(text,tag=tag),file=self.report)
@@ -31,7 +30,7 @@ class HTMLReportGenerator(ReportGenerator):
 		print('</table>',file=self.report)
 		
 	def commitAndExit(self):
-		print('</body></html>',file=self.report)
+		print(end_template,file=self.report)
 		ReportGenerator.commitAndExit(self)
 		
 

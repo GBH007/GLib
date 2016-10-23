@@ -9,7 +9,7 @@ from reportgenerator import *
 def main():
 	#~ a=TXTReportGenerator('/home/gbh007/report.txt')
 	b=HTMLReportGenerator('/home/gbh007/report.html')
-	txt='hello world1!'
+	txt='hello world!'
 	table=[['-'*(i+j+1) for j in range(4)] for i in range(5)]
 	#~ a.addText(txt)
 	b.addText(txt)
