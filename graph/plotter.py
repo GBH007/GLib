@@ -9,26 +9,44 @@ from tkinter import *
 __all__=['LinePlotter','PointPlotter','GistPlotter']
 
 class Plotter:
+	'''базовый класс для рисование графика и гистограммы'''
 	
 	def __init__(self,graph,point_list,color='black',name='noname'):
+		'''конструктор принимает объект графа (Graph) graph
+		список точек (Points) point_list цвет графика color
+		имя графика name'''
 		self.gr=graph
 		self.pl=point_list
 		self.clr=color
 		self.name=name
 	
-	def getName(self):return self.name
+	def getName(self):
+		'''возвращает имя графика'''
+		return self.name
 	
-	def min(self):return self.pl.min()
+	def min(self):
+		'''возвращает точку с набором минимальных координат из набора точек'''		
+		return self.pl.min()
 	
-	def max(self):return self.pl.max()
+	def max(self):
+		'''возвращает точку с набором максимальных координат из набора точек'''
+		return self.pl.max()
 		
-	def plot(self,axis):raise AttributeError
+	def plot(self,axis):
+		'''прорисовывает график по осям axis'''
+		raise AttributeError
 	
-	def plotLegend(self,x,y):raise AttributeError
+	def plotLegend(self,x,y):
+		'''рисует легенду к графику в точке холста x,y'''
+		raise AttributeError
 	
 class LinePlotter(Plotter):
+	'''класс для рисования графика прямыми линиями'''
 	
 	def __init__(self,graph,point_list,color='black',name='noname',width=1):
+		'''конструктор принимает объект графа (Graph) graph
+		список точек (Points) point_list цвет графика color
+		имя графика name толщину линии width'''
 		Plotter.__init__(self,graph,point_list,color,name)
 		self.width=width
 	
@@ -69,8 +87,12 @@ class LinePlotter(Plotter):
 		)
 	
 class PointPlotter(Plotter):
+	'''класс для рисования графика точками'''
 	
 	def __init__(self,graph,point_list,color='black',name='noname',radius=1):
+		'''конструктор принимает объект графа (Graph) graph
+		список точек (Points) point_list цвет графика color
+		имя графика name радиус точки radius'''
 		Plotter.__init__(self,graph,point_list,color,name)
 		self.radius=radius
 	
@@ -109,8 +131,12 @@ class PointPlotter(Plotter):
 			)
 		
 class GistPlotter(Plotter):
+	'''класс для рисования гистограммы'''
 	
 	def __init__(self,graph,point_list,color='black',name='noname',dx=None):
+		'''конструктор принимает объект графа (Graph) graph
+		список точек (Points) point_list цвет графика color
+		имя графика name ширину столбца dx'''
 		Plotter.__init__(self,graph,point_list,color,name)
 		self.dx=dx
 		
