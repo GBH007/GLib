@@ -257,7 +257,7 @@ class Points:
 		
 	def sort(self,axis=0):
 		'''сортирует набор по координате axis (в порядке неубывания)'''
-		self.__points.sort(key=lambda e:e[axis])
+		self.__points.sort(key=lambda e:e[0][axis])
 		
 	def __len__(self):
 		'''возвращает длину набора'''
