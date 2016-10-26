@@ -5,7 +5,7 @@
 #
 
 import sys
-sys.path.append('/home/gbh007/Dropbox/python/lib')
+sys.path.append('../src/')
 from GLib import *
 #~ from reportgenerator import *
 

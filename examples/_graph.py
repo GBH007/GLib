@@ -4,7 +4,7 @@
 # email:    mrgbh007@gmail.com
 #
 import sys
-sys.path.append('/home/gbh007/Dropbox/python/lib')
+sys.path.append('../src/')
 #~ from GLib.graph import *
 #~ from GLib.point import *
 from GLib import *
