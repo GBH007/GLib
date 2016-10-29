@@ -125,9 +125,4 @@ class Matrix:
 		m1=other.format(*n).get()
 		return Matrix([[m[i][j]+m1[i][j]*sign for j in range(n[1])] for i in range(n[0])])
 		
-def main():
-	m=Matrix()
-	print((m.ematrix(6).format(10,1)+m.ematrix(5).format(10,1)).getRadius())
-if __name__=='__main__':
-	main()
 		
