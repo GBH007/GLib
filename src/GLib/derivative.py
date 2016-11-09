@@ -45,6 +45,10 @@ class Function:
 	def calcF(self,x):
 		'''возвращает значение функции в точке x'''
 		return self.__f(*x)
+		
+	def __call__(self,*x):
+		'''возвращает значение функции в точке x'''
+		return self.__f(*x)
 
 def _newton(x,func,e=(0.2,0.15)):
 	xm=Matrix(vrow=x)
