@@ -9,7 +9,7 @@ start_template='''
 <style type="text/css">
 {css}
 </style>
-<title>Report</title>
+<title>{title}</title>
 </head><body>
 '''
 end_template='''</body></html>'''

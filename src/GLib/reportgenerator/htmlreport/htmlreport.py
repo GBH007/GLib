@@ -11,9 +11,9 @@ __all__=['HTMLReportGenerator']
 
 class HTMLReportGenerator(ReportGenerator):
 	
-	def __init__(self,name):
+	def __init__(self,name,title='Report'):
 		ReportGenerator.__init__(self,name)
-		print(start_template.format(css=css_template),file=self.report)
+		print(start_template.format(css=css_template,title=title),file=self.report)
 			
 	def addText(self,text,tag='text',newline=True):
 		'''добавляет текст с тегом tag в файл отчета
