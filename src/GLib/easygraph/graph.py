@@ -62,18 +62,15 @@ class Graph:
 		'''возвращает диапозон значений y'''
 		return self.__y
 		
-	def setAuto(self,axis=(0,1)):
-		'''автоматически устанавливает диапозон значений x,y по заданым осям axis из плоттеров'''
+	def setAuto(self):
+		'''автоматически устанавливает диапозон значений x,y'''
+		axis=(0,1)
 		mi=[i.min() for i in self.__plotter_list]
 		ma=[i.max() for i in self.__plotter_list]
 		x,y=zip(*mi)
 		mi=min(x),min(y)
 		x,y=zip(*ma)
 		ma=max(x),max(y)
-		#~ ma=self.__plotter_list[0].max()
-		#~ for i in self.__plotter_list:
-			#~ mi=mi.min(i.min())
-			#~ ma=ma.max(i.max())
 		xl=ma[axis[0]]-mi[axis[0]]
 		yl=ma[axis[1]]-mi[axis[1]]
 		xl*=0.05
@@ -277,17 +274,18 @@ class Graph:
 			return True
 		return False
 		
-	def clearXLine(self):
-		'''удаляет вертикальные линии'''
-		self.__canv.delete('xline')
-		self.__canv.update()
+	#~ def clearXLine(self):
+		#~ '''удаляет вертикальные линии'''
+		#~ self.__canv.delete('xline')
+		#~ self.__canv.update()
 				
-	def clearYLine(self):
-		'''удаляет горизонтальные линии'''
-		self.__canv.delete('yline')
-		self.__canv.update()
+	#~ def clearYLine(self):
+		#~ '''удаляет горизонтальные линии'''
+		#~ self.__canv.delete('yline')
+		#~ self.__canv.update()
 	
 	def _pointInfo(self):
+		'''функция обновления описания точки'''
 		try:
 			text=self.__canv.gettags(self.__canv.find_withtag(CURRENT))[2]
 		except IndexError:
@@ -304,7 +302,6 @@ class Graph:
 		
 	def reGrid(
 			self,
-			axis=(0,1),
 			autoset=True,
 			grid=False,
 			legend=True,
@@ -314,22 +311,23 @@ class Graph:
 			y_mark_list=None,
 			point_info=False
 		):
-		'''отрисовывает графики принимает оси для отрисовки axis
+		'''функция для отрисовки графиков
 		опцию автоматического определения границ autoset
 		опцию прорисовки сетки grid
 		опцию прорисовки легенды legend
 		количество отметок по x xmarks по y ymarks
-		макркированые отметки по x x_mark_list по y y_mark_list'''
+		макркированые отметки по x x_mark_list по y y_mark_list
+		опцию ототбражения описаний точек point_info'''
 		self.__canv.delete('noname')
 		if legend:
 			self.__canv.config(height=self.__y_grid_len+self.__y_indent+self.__y_down_indent+20*len(self.__plotter_list))
 			self.config(height=self.__y_grid_len+self.__y_indent+self.__y_down_indent+20*len(self.__plotter_list))
 			self.update()
-		if autoset:self.setAuto(axis)
+		if autoset:self.setAuto()
 		self.__x_grid(marks=xmarks,grid=grid,mark_list=x_mark_list)
 		self.__y_grid(marks=ymarks,grid=grid,mark_list=y_mark_list)
 		for i,plotter in enumerate(self.__plotter_list):
-			plotter.plot(axis)
+			plotter.plot()
 			if legend:
 				plotter.plotLegend(self.__x_indent,self.__y_grid_len+self.__y_indent+self.__y_down_indent+20*i)
 		if point_info:

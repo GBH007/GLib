@@ -14,7 +14,7 @@ class Plotter:
 	def __init__(self,graph,x_list,y_list,color='black',name='noname',name_list=None):
 		'''конструктор принимает объект графа (Graph) graph
 		список точек (Points) point_list цвет графика color
-		имя графика name'''
+		имя графика name описания точек name_list'''
 		self.gr=graph
 		self.x_list=x_list
 		self.y_list=y_list
@@ -34,8 +34,8 @@ class Plotter:
 		'''возвращает точку с набором максимальных координат из набора точек'''
 		return (max(self.x_list),max(self.y_list))
 		
-	def plot(self,axis):
-		'''прорисовывает график по осям axis'''
+	def plot(self):
+		'''прорисовывает график'''
 		raise AttributeError
 	
 	def plotLegend(self,x,y):
@@ -52,7 +52,7 @@ class LinePlotter(Plotter):
 		Plotter.__init__(self,graph,x_list,y_list,color,name,name_list)
 		self.width=width
 	
-	def plot(self,axis):
+	def plot(self):
 		self.gr.canv.delete(self.name)
 		points=zip(self.x_list,self.y_list)
 		point=None
@@ -105,7 +105,7 @@ class PointPlotter(Plotter):
 		Plotter.__init__(self,graph,x_list,y_list,color,name,name_list)
 		self.radius=radius
 	
-	def plot(self,axis):
+	def plot(self):
 		self.gr.canv.delete(self.name)
 		points=zip(self.x_list,self.y_list)
 		for ind,i in enumerate(points):
@@ -155,7 +155,7 @@ class GistPlotter(Plotter):
 		Plotter.__init__(self,graph,x_list,y_list,color,name,name_list)
 		self.dx=dx
 	
-	def plot(self,axis):
+	def plot(self):
 		self.gr.canv.delete(self.name)
 		points=zip(self.x_list,self.y_list)
 		if not self.dx:
