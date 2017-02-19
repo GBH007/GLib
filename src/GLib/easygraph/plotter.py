@@ -154,10 +154,6 @@ class GistPlotter(Plotter):
 		имя графика name ширину столбца dx'''
 		Plotter.__init__(self,graph,x_list,y_list,color,name,name_list)
 		self.dx=dx
-		
-	def max(self):return self.pl.maxN()
-	
-	def min(self):return self.pl.minN()
 	
 	def plot(self,axis):
 		self.gr.canv.delete(self.name)

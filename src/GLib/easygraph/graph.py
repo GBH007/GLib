@@ -38,12 +38,13 @@ class Graph:
 		'''добавление нового графика, принимает плоттер'''
 		self.__plotter_list.append(plotter)
 		
+	def addPlotters(self,*plotters):
+		'''добавление новых графиков, принимает плоттеры'''
+		self.__plotter_list.extend(plotters)
+		
 	def delPlotter(self,plotter):
 		'''удаление графика, принимает плоттер'''
-		for i in self.__plotter_list:
-			if plotter is i[0]:
-				self.__plotter_list.remove(i)
-				break
+		self.__plotter_list.remove(plotter)
 				
 	def setX(self,x):
 		'''устанавливает диапозон значений x'''
@@ -234,35 +235,35 @@ class Graph:
 				)
 		self.__canv.update()
 		
-	def addXLine(self,x,clr='black'):
-		'''добавляет вертикальную линию в координате x цвета clr
-		примечание: не использовать до autoset, setX, setY'''
-		self.__canv.create_line(
-			self._x_to_grid(x),
-			self.__y_grid_len+self.__y_indent,
-			self._x_to_grid(x),
-			self.__y_indent,
-			width=0.2,
-			fill=clr,
-			tags='xline',
-			dash=(20,10)
-		)
-		self.__canv.update()
+	#~ def addXLine(self,x,clr='black'):
+		#~ '''добавляет вертикальную линию в координате x цвета clr
+		#~ примечание: не использовать до autoset, setX, setY'''
+		#~ self.__canv.create_line(
+			#~ self._x_to_grid(x),
+			#~ self.__y_grid_len+self.__y_indent,
+			#~ self._x_to_grid(x),
+			#~ self.__y_indent,
+			#~ width=0.2,
+			#~ fill=clr,
+			#~ tags='xline',
+			#~ dash=(20,10)
+		#~ )
+		#~ self.__canv.update()
 		
-	def addYLine(self,y,clr='black'):
-		'''добавляет горизонтальную линию в координате y цвета clr
-		примечание: не использовать до autoset, setX, setY'''
-		self.__canv.create_line(
-			self.__x_indent,
-			self._y_to_grid(y),
-			self.__x_grid_len+self.__x_indent,
-			self._y_to_grid(y),
-			width=0.2,
-			fill=clr,
-			tags='yline',
-			dash=(20,10)
-		)
-		self.__canv.update()
+	#~ def addYLine(self,y,clr='black'):
+		#~ '''добавляет горизонтальную линию в координате y цвета clr
+		#~ примечание: не использовать до autoset, setX, setY'''
+		#~ self.__canv.create_line(
+			#~ self.__x_indent,
+			#~ self._y_to_grid(y),
+			#~ self.__x_grid_len+self.__x_indent,
+			#~ self._y_to_grid(y),
+			#~ width=0.2,
+			#~ fill=clr,
+			#~ tags='yline',
+			#~ dash=(20,10)
+		#~ )
+		#~ self.__canv.update()
 		
 	def _xInGraph(self,x):
 		'''проверяет находится ли координата холста x на поле графика'''
@@ -285,6 +286,21 @@ class Graph:
 		'''удаляет горизонтальные линии'''
 		self.__canv.delete('yline')
 		self.__canv.update()
+	
+	def _pointInfo(self):
+		try:
+			text=self.__canv.gettags(self.__canv.find_withtag(CURRENT))[2]
+		except IndexError:
+			text=''
+		self.__canv.delete('pointlabel')
+		self.__canv.create_text(
+			self.__x_indent+self.__x_grid_len-10,
+			self.__y_grid_len+self.__y_indent-10,
+			text='point: '+text,
+			tags='pointlabel',
+			anchor=SE
+		)
+		self.after(500,self._pointInfo)
 		
 	def reGrid(
 			self,
@@ -295,7 +311,8 @@ class Graph:
 			xmarks=10,
 			ymarks=10,
 			x_mark_list=None,
-			y_mark_list=None
+			y_mark_list=None,
+			point_info=False
 		):
 		'''отрисовывает графики принимает оси для отрисовки axis
 		опцию автоматического определения границ autoset
@@ -315,6 +332,8 @@ class Graph:
 			plotter.plot(axis)
 			if legend:
 				plotter.plotLegend(self.__x_indent,self.__y_grid_len+self.__y_indent+self.__y_down_indent+20*i)
+		if point_info:
+			self._pointInfo()
 		self.__canv.update()
 		
 class GraphToplevel(Toplevel,Graph):
