@@ -63,11 +63,16 @@ class Graph:
 		
 	def setAuto(self,axis=(0,1)):
 		'''автоматически устанавливает диапозон значений x,y по заданым осям axis из плоттеров'''
-		mi=self.__plotter_list[0].min()
-		ma=self.__plotter_list[0].max()
-		for i in self.__plotter_list:
-			mi=mi.min(i.min())
-			ma=ma.max(i.max())
+		mi=[i.min() for i in self.__plotter_list]
+		ma=[i.max() for i in self.__plotter_list]
+		x,y=zip(*mi)
+		mi=min(x),min(y)
+		x,y=zip(*ma)
+		ma=max(x),max(y)
+		#~ ma=self.__plotter_list[0].max()
+		#~ for i in self.__plotter_list:
+			#~ mi=mi.min(i.min())
+			#~ ma=ma.max(i.max())
 		xl=ma[axis[0]]-mi[axis[0]]
 		yl=ma[axis[1]]-mi[axis[1]]
 		xl*=0.05

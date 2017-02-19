@@ -11,12 +11,14 @@ __all__=['LinePlotter','PointPlotter','GistPlotter']
 class Plotter:
 	'''базовый класс для рисование графика и гистограммы'''
 	
-	def __init__(self,graph,point_list,color='black',name='noname'):
+	def __init__(self,graph,x_list,y_list,color='black',name='noname',name_list=None):
 		'''конструктор принимает объект графа (Graph) graph
 		список точек (Points) point_list цвет графика color
 		имя графика name'''
 		self.gr=graph
-		self.pl=point_list
+		self.x_list=x_list
+		self.y_list=y_list
+		self.name_list=name_list
 		self.clr=color
 		self.name=name
 	
@@ -26,11 +28,11 @@ class Plotter:
 	
 	def min(self):
 		'''возвращает точку с набором минимальных координат из набора точек'''		
-		return self.pl.min()
+		return (min(self.x_list),min(self.y_list))
 	
 	def max(self):
 		'''возвращает точку с набором максимальных координат из набора точек'''
-		return self.pl.max()
+		return (max(self.x_list),max(self.y_list))
 		
 	def plot(self,axis):
 		'''прорисовывает график по осям axis'''
@@ -43,24 +45,28 @@ class Plotter:
 class LinePlotter(Plotter):
 	'''класс для рисования графика прямыми линиями'''
 	
-	def __init__(self,graph,point_list,color='black',name='noname',width=1):
+	def __init__(self,graph,x_list,y_list,color='black',name='noname',width=1,name_list=None):
 		'''конструктор принимает объект графа (Graph) graph
 		список точек (Points) point_list цвет графика color
 		имя графика name толщину линии width'''
-		Plotter.__init__(self,graph,point_list,color,name)
+		Plotter.__init__(self,graph,x_list,y_list,color,name,name_list)
 		self.width=width
 	
 	def plot(self,axis):
 		self.gr.canv.delete(self.name)
-		points=self.pl.toPlot(axis)
+		points=zip(self.x_list,self.y_list)
 		point=None
-		for i in points:
+		for ind,i in enumerate(points):
 			x=self.gr._x_to_grid(i[0])
 			y=self.gr._y_to_grid(i[1])
 			if not self.gr._xInGraph(x):continue
 			if not self.gr._yInGraph(y):continue
 			if point==None:point=i
 			else:
+				try:
+					tags=(self.name,'plotter',self.name_list[ind])
+				except (IndexError,TypeError):
+					tags=(self.name,'plotter')
 				self.gr.canv.create_line(
 					self.gr._x_to_grid(point[0]),
 					self.gr._y_to_grid(point[1]),
@@ -68,7 +74,7 @@ class LinePlotter(Plotter):
 					y,
 					width=self.width,
 					fill=self.clr,
-					tags=self.name
+					tags=tags
 				)
 				point=i
 				
@@ -92,22 +98,25 @@ class LinePlotter(Plotter):
 class PointPlotter(Plotter):
 	'''класс для рисования графика точками'''
 	
-	def __init__(self,graph,point_list,color='black',name='noname',radius=1):
+	def __init__(self,graph,x_list,y_list,color='black',name='noname',radius=1,name_list=None):
 		'''конструктор принимает объект графа (Graph) graph
 		список точек (Points) point_list цвет графика color
 		имя графика name радиус точки radius'''
-		Plotter.__init__(self,graph,point_list,color,name)
+		Plotter.__init__(self,graph,x_list,y_list,color,name,name_list)
 		self.radius=radius
 	
 	def plot(self,axis):
 		self.gr.canv.delete(self.name)
-		points=self.pl.toPlot(axis)
-		point=None
-		for i in points:
+		points=zip(self.x_list,self.y_list)
+		for ind,i in enumerate(points):
 			x=self.gr._x_to_grid(i[0])
 			y=self.gr._y_to_grid(i[1])
 			if not self.gr._xInGraph(x):continue
 			if not self.gr._yInGraph(y):continue
+			try:
+				tags=(self.name,'plotter',self.name_list[ind])
+			except (IndexError,TypeError):
+				tags=(self.name,'plotter')
 			self.gr.canv.create_oval(
 				x-self.radius,
 				y-self.radius,
@@ -115,7 +124,7 @@ class PointPlotter(Plotter):
 				y+self.radius,
 				fill=self.clr,
 				width=0,
-				tags=self.name
+				tags=tags
 			)
 				
 	def plotLegend(self,x,y):
@@ -139,11 +148,11 @@ class PointPlotter(Plotter):
 class GistPlotter(Plotter):
 	'''класс для рисования гистограммы'''
 	
-	def __init__(self,graph,point_list,color='black',name='noname',dx=None):
+	def __init__(self,graph,x_list,y_list,color='black',name='noname',dx=None,name_list=None):
 		'''конструктор принимает объект графа (Graph) graph
 		список точек (Points) point_list цвет графика color
 		имя графика name ширину столбца dx'''
-		Plotter.__init__(self,graph,point_list,color,name)
+		Plotter.__init__(self,graph,x_list,y_list,color,name,name_list)
 		self.dx=dx
 		
 	def max(self):return self.pl.maxN()
@@ -152,17 +161,22 @@ class GistPlotter(Plotter):
 	
 	def plot(self,axis):
 		self.gr.canv.delete(self.name)
-		points=self.pl.toGist(axis[0])
+		points=zip(self.x_list,self.y_list)
 		if not self.dx:
-			self.dx=self.pl.getMinDc(axis[0])
-		for i in points:
+			m=sorted(self.x_list)
+			self.dx=min([abs(m[i]-m[i-1]) for i in range(len(m)-1,0,-1)])
+		for ind,i in enumerate(points):
+			try:
+				tags=(self.name,'plotter',self.name_list[ind])
+			except (IndexError,TypeError):
+				tags=(self.name,'plotter')
 			self.gr.canv.create_rectangle(
 				self.gr._x_to_grid(i[0]-self.dx/2),
 				self.gr._y_to_grid(i[1]),
 				self.gr._x_to_grid(i[0]+self.dx/2),
 				self.gr._y_to_grid(self.gr.getY()[0]),
 				fill=self.clr,
-				tags=self.name
+				tags=tags
 			)
 
 	def plotLegend(self,x,y):
