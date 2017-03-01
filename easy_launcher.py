@@ -20,7 +20,7 @@ _DEFAULT_REPO_LOAD_TEMPLATE='https://github.com/{owner}/{repo}/archive/{branch}.
 _DEFAULT_REPO_INFO_TEMPLATE='https://api.github.com/repos/{owner}/{repo}/commits?sha={branch}'
 _DEFAULT_LIBAPPENDER_NAME='glib_appender.py'
 _DEFAULT_LIBAPPENDER_TEMPLATE="""
-link={link}
+link='{link}'
 import sys
 sys.path.append(link)
 """
@@ -66,6 +66,7 @@ class Loader:
 			print('Используется последняя версия')
 		if libapp:
 			self.createLibAppender()
+			print('создание {name} завершено'.format(name=_DEFAULT_LIBAPPENDER_NAME))
 			
 	def _fullTmpPath(self):
 		return os.path.join(self.load_dir,self.default_tmp_file)
