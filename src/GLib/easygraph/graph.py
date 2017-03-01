@@ -320,8 +320,8 @@ class Graph:
 		опцию ототбражения описаний точек point_info'''
 		self.__canv.delete('noname')
 		if legend:
-			self.__canv.config(height=self.__y_grid_len+self.__y_indent+self.__y_down_indent+20*len(self.__plotter_list))
-			self.config(height=self.__y_grid_len+self.__y_indent+self.__y_down_indent+20*len(self.__plotter_list))
+			self.__canv.config(height=self.__y_grid_len+self.__y_indent+self.__y_down_indent+20*((len(self.__plotter_list)+1)//2))
+			self.config(height=self.__y_grid_len+self.__y_indent+self.__y_down_indent+20*((len(self.__plotter_list)+1)//2))
 			self.update()
 		if autoset:self.setAuto()
 		self.__x_grid(marks=xmarks,grid=grid,mark_list=x_mark_list)
@@ -329,7 +329,10 @@ class Graph:
 		for i,plotter in enumerate(self.__plotter_list):
 			plotter.plot()
 			if legend:
-				plotter.plotLegend(self.__x_indent,self.__y_grid_len+self.__y_indent+self.__y_down_indent+20*i)
+				if i%2:
+					plotter.plotLegend(self.__x_indent+self.__x_grid_len/2,self.__y_grid_len+self.__y_indent+self.__y_down_indent+20*(i//2))
+				else:
+					plotter.plotLegend(self.__x_indent,self.__y_grid_len+self.__y_indent+self.__y_down_indent+20*(i//2))
 		if point_info:
 			self._pointInfo()
 		self.__canv.update()

@@ -6,7 +6,7 @@
 
 from tkinter import *
 
-__all__=['LinePlotter','PointPlotter','GistPlotter']
+__all__=['LinePlotter','PointPlotter','GistPlotter','RectanglePlotter','CrossPlotter']
 
 class Plotter:
 	'''базовый класс для рисование графика и гистограммы'''
@@ -144,6 +144,110 @@ class PointPlotter(Plotter):
 				fill=self.clr,
 				tags=self.name
 			)
+			
+class RectanglePlotter(PointPlotter):
+	'''класс для рисования графика квадратами'''
+	
+	def plot(self):
+		self.gr.canv.delete(self.name)
+		points=zip(self.x_list,self.y_list)
+		for ind,i in enumerate(points):
+			x=self.gr._x_to_grid(i[0])
+			y=self.gr._y_to_grid(i[1])
+			if not self.gr._xInGraph(x):continue
+			if not self.gr._yInGraph(y):continue
+			try:
+				tags=(self.name,'plotter',self.name_list[ind])
+			except (IndexError,TypeError):
+				tags=(self.name,'plotter')
+			self.gr.canv.create_rectangle(
+				x-self.radius,
+				y-self.radius,
+				x+self.radius,
+				y+self.radius,
+				fill=self.clr,
+				width=0,
+				tags=tags
+			)
+				
+	def plotLegend(self,x,y):
+		self.gr.canv.create_text(
+			x+10,
+			y,
+			text=self.name,
+			anchor=W,
+			tags=self.name
+		)
+		for i in range(3):
+			self.gr.canv.create_rectangle(
+				x-20-i*15,
+				y-5,
+				x-10-i*15,
+				y+5,
+				fill=self.clr,
+				tags=self.name
+			)
+			
+class CrossPlotter(PointPlotter):
+	'''класс для рисования графика крестами'''
+	
+	def plot(self):
+		self.gr.canv.delete(self.name)
+		points=zip(self.x_list,self.y_list)
+		for ind,i in enumerate(points):
+			x=self.gr._x_to_grid(i[0])
+			y=self.gr._y_to_grid(i[1])
+			if not self.gr._xInGraph(x):continue
+			if not self.gr._yInGraph(y):continue
+			try:
+				tags=(self.name,'plotter',self.name_list[ind])
+			except (IndexError,TypeError):
+				tags=(self.name,'plotter')
+			self.gr.canv.create_line(
+				x-self.radius,
+				y-self.radius,
+				x+self.radius+1,
+				y+self.radius+1,
+				fill=self.clr,
+				width=0,
+				tags=tags
+			)
+			self.gr.canv.create_line(
+				x-self.radius,
+				y+self.radius,
+				x+self.radius+1,
+				y-self.radius-1,
+				fill=self.clr,
+				width=0,
+				tags=tags
+			)
+				
+	def plotLegend(self,x,y):
+		self.gr.canv.create_text(
+			x+10,
+			y,
+			text=self.name,
+			anchor=W,
+			tags=self.name
+		)
+		for i in range(3):
+			self.gr.canv.create_line(
+				x-20-i*15,
+				y-5,
+				x-10-i*15,
+				y+5,
+				fill=self.clr,
+				tags=self.name
+			)
+			self.gr.canv.create_line(
+				x-20-i*15,
+				y+5,
+				x-10-i*15,
+				y-5,
+				fill=self.clr,
+				tags=self.name
+			)
+	
 		
 class GistPlotter(Plotter):
 	'''класс для рисования гистограммы'''
