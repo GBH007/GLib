@@ -18,6 +18,12 @@ _DEFAULT_LOAD_DIR=os.getcwd()
 _DEFAULT_TMP_FILE='tmp.zip'
 _DEFAULT_REPO_LOAD_TEMPLATE='https://github.com/{owner}/{repo}/archive/{branch}.zip'
 _DEFAULT_REPO_INFO_TEMPLATE='https://api.github.com/repos/{owner}/{repo}/commits?sha={branch}'
+_DEFAULT_LIBAPPENDER_NAME='glib_appender.py'
+_DEFAULT_LIBAPPENDER_TEMPLATE="""
+link={link}
+import sys
+sys.path.append(link)
+"""
 
 class Loader:
 	
@@ -43,7 +49,7 @@ class Loader:
 		except (FileNotFoundError,json.decoder.JSONDecodeError):
 			self.last_commit=None
 			
-	def run(self,force=False):
+	def run(self,force=False,libapp=False):
 		last_com=self.getLastCommit()
 		if force or not self.last_commit or last_com[0]>self.last_commit[0]:
 			print('Производится загрузка новой версии')
@@ -58,6 +64,8 @@ class Loader:
 			print('Обновление завершено')
 		else:
 			print('Используется последняя версия')
+		if libapp:
+			self.createLibAppender()
 			
 	def _fullTmpPath(self):
 		return os.path.join(self.load_dir,self.default_tmp_file)
@@ -132,14 +140,19 @@ class Loader:
 		commits.sort()
 		return commits[-1]
 		
+	def createLibAppender(self):
+		link=os.getcwd()
+		f=open(_DEFAULT_LIBAPPENDER_NAME,'w')
+		f.write(_DEFAULT_LIBAPPENDER_TEMPLATE.format(link=link))
+		f.close()
+		
 	def clear(self):
 		os.remove(self._fullTmpPath())
 
 	
 def main():
 	l=Loader('GBH007','GLib','master')
-	#~ l.load()
-	l.run()
+	l.run(force=False,libapp=False)
 
 if __name__=='__main__':
 	main()
