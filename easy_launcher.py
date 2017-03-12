@@ -19,7 +19,7 @@ _DEFAULT_TMP_FILE='tmp.zip'
 _DEFAULT_REPO_LOAD_TEMPLATE='https://github.com/{owner}/{repo}/archive/{branch}.zip'
 _DEFAULT_REPO_INFO_TEMPLATE='https://api.github.com/repos/{owner}/{repo}/commits?sha={branch}'
 _DEFAULT_LIBAPPENDER_FILENAME='glib_appender.py'
-#~ _DEFAULT_ACCESS_MODE='0755'
+_DEFAULT_ACCESS_MODE=0o755
 try:
 	_DEFAULT_LAUNCHER_FILENAME=__file__
 except NameError:
@@ -151,6 +151,7 @@ class Loader:
 			shutil.move(i,self.load_dir)
 		if self.launcher_update:
 			shutil.move(os.path.join(self.load_dir,zf.namelist()[0][:-1],'easy_launcher.py'),os.path.join(self.load_dir,_DEFAULT_LAUNCHER_FILENAME))
+			os.chmod(os.path.join(self.load_dir,_DEFAULT_LAUNCHER_FILENAME), _DEFAULT_ACCESS_MODE)
 		self.remove(os.path.join(self.load_dir,zf.namelist()[0][:-1]))
 		zf.close()
 		
